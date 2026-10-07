@@ -34,7 +34,8 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendOnSignUp: true,
-    autoSignInAfterVerification: true,
+    // The confirmation link only confirms; signing in still needs the password (the demo outbox is public).
+    autoSignInAfterVerification: false,
     expiresIn: 60 * 60 * 24,
     sendVerificationEmail: async ({ user, url }) => {
       queueEmail({

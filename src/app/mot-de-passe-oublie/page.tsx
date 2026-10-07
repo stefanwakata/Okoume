@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ForgotForm } from "@/components/auth/forms";
+import { isDemo } from "@/lib/env";
 
 export const metadata: Metadata = { title: "Mot de passe oublié" };
 
@@ -9,6 +10,7 @@ export default function Forgot() {
     <div className="page"><div className="wrap narrow">
       <h1>Mot de passe oublié</h1>
       <p className="lede">Entre l’adresse de ton compte. On t’envoie un lien pour en choisir un nouveau.</p>
+      {isDemo && <div className="note-box" role="note" style={{ marginTop: 24 }}><p>Version de démonstration : pour la sécurité des comptes, les liens de réinitialisation ne sont pas affichés dans la boîte de démo publique.</p></div>}
       <div className="paper top" style={{ marginTop: 32 }}>
         <div className="head"><span>Nouveau mot de passe</span><span>Okoumé</span></div>
         <ForgotForm />
