@@ -1,0 +1,32 @@
+# Render Blueprint: one free web service. The database lives on Neon (free plan), emails go through Resend (optional).
+# On the free plan the pre-deploy command isn't available, so migrations run during the build.
+services:
+  - type: web
+    name: okoume
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run db:migrate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false # Neon pooled connection string
+      - key: DATABASE_URL_UNPOOLED
+        sync: false # Neon direct connection string (migrations)
+      - key: BETTER_AUTH_URL
+        sync: false # e.g. https://okoume.onrender.com
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
+      - key: DEMO_MODE
+        value: "1"
+      - key: RESEND_API_KEY
+        sync: false # leave empty for the demo: emails stay in the outbox
+      - key: MAIL_FROM
+        value: "Okoumé <onboarding@resend.dev>"
+      - key: TRUSTED_IP_HEADER
+        value: x-forwarded-for

@@ -1,0 +1,50 @@
+{
+  "name": "okoume",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "validate": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.7",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource/antonio": "^5.3.0",
+    "better-auth": "^1.7.7",
+    "drizzle-orm": "^0.45.3",
+    "next": "16.4.0",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^22.20.5",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^18.0.6",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=20.9"
+  }
+}
