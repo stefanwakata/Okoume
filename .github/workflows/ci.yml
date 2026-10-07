@@ -1,0 +1,41 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+# Least privilege: the workflow only reads the code.
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/okoume
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/okoume_test
+      BETTER_AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret
+      BETTER_AUTH_URL: http://localhost:3000
+      DEMO_MODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: psql postgres://postgres:postgres@localhost:5432 -c "create database okoume" -c "create database okoume_test"
+      - name: Type check
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Integration tests (real Postgres)
+        run: npm test
+      - name: Migrations
+        run: npm run db:migrate
+      - name: Production build
+        run: npm run build
