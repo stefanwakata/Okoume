@@ -27,7 +27,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
         <div className="head"><span>Pas reçu ?</span><span>Okoumé</span></div>
         <ResendVerification email={email} />
       </div>
-      <p className="muted" style={{ marginTop: 24 }}>Après la confirmation, quelqu’un du comité de l’asso valide ton compte, en général dans la journée. Tu reçois un courriel à ce moment-là.</p>
+      {!isDemo && <p className="muted" style={{ marginTop: 24 }}>Après la confirmation, quelqu’un du comité de l’asso valide ton compte, en général dans la journée. Tu reçois un courriel à ce moment-là.</p>}
     </div></div>
   );
 }

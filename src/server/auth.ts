@@ -5,7 +5,7 @@ import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins/admin";
 import { db } from "@/server/db";
 import * as schema from "@/server/db/schema";
-import { env, appUrl } from "@/lib/env";
+import { env, appUrl, isDemo } from "@/lib/env";
 import { queueEmail } from "@/server/email";
 import { APIError } from "better-auth/api";
 import { and, eq, inArray } from "drizzle-orm";
@@ -40,7 +40,7 @@ export const auth = betterAuth({
       queueEmail({
         to: user.email, kind: "verify", userId: user.id,
         subject: "Confirme ton adresse Okoumé",
-        text: `Bonjour ${user.name},\n\nConfirme ton adresse avec ce lien (valide 24 heures) :\n${url}\n\nEnsuite, quelqu’un du comité de l’asso valide ton compte. Tu pourras alors publier et réserver des livres.\n\nSi tu ne t’es pas inscrit sur Okoumé, ignore ce courriel.\n\nOkoumé`,
+        text: `Bonjour ${user.name},\n\nConfirme ton adresse avec ce lien (valide 24 heures) :\n${url}\n\n${isDemo ? "Tu pourras ensuite publier et réserver des livres." : "Ensuite, quelqu’un du comité de l’asso valide ton compte. Tu pourras alors publier et réserver des livres."}\n\nSi tu ne t’es pas inscrit sur Okoumé, ignore ce courriel.\n\nOkoumé`,
       });
     },
   },
@@ -76,7 +76,8 @@ export const auth = betterAuth({
           const school = (u as { school?: unknown }).school;
           if (name.length < 2 || name.length > 60) throw new APIError("BAD_REQUEST", { message: "Le nom doit faire entre 2 et 60 caractères." });
           if (typeof school !== "string" || !(SCHOOLS as readonly string[]).includes(school)) throw new APIError("BAD_REQUEST", { message: "Choisis ton établissement dans la liste." });
-          return { data: { ...u, name } };
+          // Demo: new accounts are approved right away so visitors can try everything. Real launch: the committee approves.
+          return { data: { ...u, name, ...(isDemo ? { memberStatus: "approved" } : {}) } };
         },
       },
     },

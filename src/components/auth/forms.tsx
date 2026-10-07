@@ -54,7 +54,7 @@ function Submit({ pending, label, message }: { pending: boolean; label: string; 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* ---------- Connexion ---------- */
-export function SignInForm({ next, demo, demoPassword }: { next?: string; demo?: readonly { email: string; name: string; role: string }[]; demoPassword?: string }) {
+export function SignInForm({ next }: { next?: string }) {
   const router = useRouter();
   const s = useSubmit();
   const [email, setEmail] = useState("");
@@ -85,7 +85,6 @@ export function SignInForm({ next, demo, demoPassword }: { next?: string; demo?:
   }
 
   return (
-    <>
       <form className="form" onSubmit={onSubmit} noValidate>
         <Field name="email" label="Courriel" error={s.errors.email}>
           <input name="email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} required {...aria("email", s.errors.email)} />
@@ -98,21 +97,6 @@ export function SignInForm({ next, demo, demoPassword }: { next?: string; demo?:
         <Submit pending={s.pending} label="Me connecter" message={s.message} />
         <p className="muted" style={{ fontSize: 16 }}><Link href="/mot-de-passe-oublie">Mot de passe oublié</Link></p>
       </form>
-      {demo && demo.length > 0 && (
-        <div className="demo-accounts">
-          <p className="head"><span>Comptes de démonstration</span></p>
-          <ul>
-            {demo.map((a) => (
-              <li key={a.email}>
-                <button type="button" disabled={s.pending} onClick={() => login(a.email, demoPassword ?? "")}>
-                  <b>{a.name}</b><span>{a.role}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </>
   );
 }
 

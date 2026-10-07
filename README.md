@@ -13,8 +13,3 @@ npm run db:migrate
 npm run db:seed        # données de démonstration
 npm run dev
 ```
-
-## Démo
-
-Comptes de démonstration (mot de passe : `etagere-demo-2026-okoume`) :
-comite@demo.okoume.ca, nadia@demo.okoume.ca, samuel@demo.okoume.ca, lea@demo.okoume.ca.

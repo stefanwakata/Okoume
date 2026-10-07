@@ -6,8 +6,9 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { sql } from "drizzle-orm";
 import { hashPassword } from "better-auth/crypto";
 import * as schema from "../src/server/db/schema";
-import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/lib/demo";
 
+const SEED_PASSWORD = process.env.SEED_PASSWORD ?? "";
+if (SEED_PASSWORD.length < 15) { console.error("SEED_PASSWORD manquant (15 caractères minimum)."); process.exit(1); }
 if (process.env.DEMO_MODE !== "1") { console.error("Seed refusé : DEMO_MODE doit valoir 1 (jamais en production)."); process.exit(1); }
 const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 const pool = new Pool({ connectionString: url, max: 1 });
@@ -20,12 +21,12 @@ const isoDay = (n: number) => days(n).toISOString().slice(0, 10);
 async function main() {
   await db.execute(sql`truncate table audit_log, email_outbox, reservation, listing, session, account, verification, rate_limit, "user" cascade`);
 
-  const hash = await hashPassword(DEMO_PASSWORD);
+  const hash = await hashPassword(SEED_PASSWORD);
   const people = [
-    { ...DEMO_ACCOUNTS[0], role: "admin", memberStatus: "approved", school: "Université de Montréal" },
-    { ...DEMO_ACCOUNTS[1], role: "user", memberStatus: "approved", school: "Université de Montréal" },
-    { ...DEMO_ACCOUNTS[2], role: "user", memberStatus: "approved", school: "Polytechnique Montréal" },
-    { ...DEMO_ACCOUNTS[3], role: "user", memberStatus: "pending", school: "UQAM" },
+    { email: "comite@demo.okoume.ca", name: "Comité (démo)", role: "admin", memberStatus: "approved", school: "Université de Montréal" },
+    { email: "nadia@demo.okoume.ca", name: "Nadia (démo)", role: "user", memberStatus: "approved", school: "Université de Montréal" },
+    { email: "samuel@demo.okoume.ca", name: "Samuel (démo)", role: "user", memberStatus: "approved", school: "Polytechnique Montréal" },
+    { email: "lea@demo.okoume.ca", name: "Léa (démo)", role: "user", memberStatus: "pending", school: "UQAM" },
     { email: "karim@demo.okoume.ca", name: "Karim (démo)", role: "user", memberStatus: "approved", school: "HEC Montréal" },
     { email: "ines@demo.okoume.ca", name: "Inès (démo)", role: "user", memberStatus: "approved", school: "Concordia" },
   ] as const;
@@ -80,7 +81,7 @@ async function main() {
     { actorId: ids.comite, action: "member.approved", targetType: "user", targetId: ids.nadia, createdAt: days(-36) },
   ]);
   await db.insert(emailOutbox).values({
-    to: DEMO_ACCOUNTS[2].email, userId: ids.samuel, kind: "member.approved", status: "stored",
+    to: "samuel@demo.okoume.ca", userId: ids.samuel, kind: "member.approved", status: "stored",
     subject: "Ton compte Okoumé est validé",
     text: "Bonjour Samuel,\n\nLe comité de l’asso a validé ton compte. Tu peux maintenant publier tes livres et réserver ceux des autres.\n\nOkoumé",
     createdAt: days(-35),
