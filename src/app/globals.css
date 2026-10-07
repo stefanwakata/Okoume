@@ -238,10 +238,6 @@ a.inline:hover{color:#fff}
 .note-box.warn{border-left-color:var(--stamp)}
 .flash{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--paper);color:var(--paper-ink);padding:14px 20px;border-left:6px solid var(--stamp);max-width:min(560px,calc(100vw - 32px));font-size:17px;animation:flashIn .35s var(--ease)}
 @keyframes flashIn{from{opacity:0;transform:translate(-50%,10px)}}
-.demo-bar{background:var(--wood);color:#1a120d;text-align:center;font-size:15px;line-height:34px;height:34px;padding:0 var(--g);position:fixed;top:0;left:0;right:0;z-index:31;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body.demo .site-nav{top:34px}
-body.demo .page{padding-top:calc(clamp(110px,14vw,150px) + 34px)}
-.demo-bar a{color:inherit}
 
 /* listing rows (spines) */
 .rows{border-top:1px solid var(--line)}
@@ -330,7 +326,3 @@ details.danger{border-left-color:var(--stamp)}
 .log li{padding:10px 0;border-bottom:1px solid var(--line);color:var(--muted)}
 .log b{color:var(--ink);font-weight:600}
 .log time{display:inline-block;min-width:150px;font-size:15px}
-/* Demo bar (34px, fixed) pushes the fixed layers down */
-body.demo .cap{top:calc(126px + env(safe-area-inset-top,0px))}
-body.demo .nogl .stage{padding-top:164px}
-@media (max-width:820px){body.demo .site-nav .links{top:98px}}

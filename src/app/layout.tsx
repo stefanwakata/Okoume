@@ -19,13 +19,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const viewer = await getViewer();
   return (
     <html lang="fr-CA">
-      <body className={isDemo ? "demo" : undefined}>
+      <body>
         <a className="skip" href="#main">Aller au contenu</a>
-        {isDemo && <div className="demo-bar">Version de démo, annonces fictives. <Link href="/demo/courriels">Courriels envoyés</Link></div>}
         <Header signedIn={!!viewer} isAdmin={viewer?.role === "admin"} canPublish={isMember(viewer)} />
         <main id="main" tabIndex={-1}>{children}</main>
         <footer>
-          <span>Okoumé, un projet pour l’association des étudiants gabonais à Montréal.</span>
           <span className="flinks"><Link href="/confidentialite">Confidentialité</Link><Link href="/conditions">Conditions d’utilisation</Link></span>
         </footer>
         <Flash />
